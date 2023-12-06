@@ -118,7 +118,8 @@ int main() {
     }
   }
   cout << "Soil min: " << resultatPartI << endl;
-  //Part II
+  //Part II (too long)
+  /*
   long long resultatPartII = LLONG_MAX;
   location.clear();
   for (long long seed = 0; seed < seeds.size()-1; seed++) {
@@ -159,5 +160,62 @@ int main() {
       }
     }
   }
-  cout << "Soil min PartII: " << resultatPartII << endl;
+  */
+  cout << endl;
+  //Part II 
+  long long resultatPartII = LLONG_MAX;
+  location.clear();
+  long long lowestNumber = 0;
+  bool repeat = true;
+  long long repeatCounter = 0;
+  while(repeat) {
+    long long nextVal = repeatCounter;
+    for (long long conditions = mapping.size()-1; conditions >= 0; conditions--) {
+      for (long long exactCondition = 0; exactCondition < mapping.at(conditions).size(); exactCondition++) {
+        long long dest = -1;
+        long long source = -1;
+        long long range = -1;
+        for (long long numberCond = 0; numberCond < mapping.at(conditions).at(exactCondition).size(); numberCond++) {
+          //cout << mapping.at(conditions).at(exactCondition).at(numberCond);
+          if (numberCond == 0) {
+            dest = mapping.at(conditions).at(exactCondition).at(numberCond);
+          }
+          else if (numberCond == mapping.at(conditions).at(exactCondition).size()-1) {
+            range = mapping.at(conditions).at(exactCondition).at(numberCond);
+          }
+          else {
+            source = mapping.at(conditions).at(exactCondition).at(numberCond);
+          }
+        }
+        //cout << dest << " " << source << " " << range << endl;
+        if (nextVal >= dest && nextVal <= dest + range) {
+          //cout << "Nextval I: " << nextVal << endl;
+          nextVal = source + (nextVal - dest);
+          //cout << "Nextval II: " << nextVal << endl;
+          break;
+        }
+      }
+    }
+    //Check Seeds
+    /*
+    cout << "#####\n" << "nextVal: " << nextVal << endl;
+    if (repeatCounter == 46) {
+      repeat = false;
+    }
+    */
+    for (long long seed = 0; seed < seeds.size()-1; seed++) {
+      if (seed%2 == 0) {
+        if (nextVal >= seeds.at(seed) && nextVal <= seeds.at(seed)+seeds.at(seed+1)-1) {
+          lowestNumber = repeatCounter;
+          cout << "start: " << seeds.at(seed) << " Ende: " << seeds.at(seed) + seeds.at(seed+1)-1 << "\n";
+          cout << "lowestNumber: " << lowestNumber << endl;
+          cout << "corresponding seed: " << nextVal << endl;
+          repeat = false;;
+        }
+      }
+    }
+    repeatCounter++;
+  }
+
+  cout << "Soil min PartII: " << lowestNumber << endl;
 }
