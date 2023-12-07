@@ -37,7 +37,7 @@ public class day7 {
 		
 		BufferedReader br;
 		try {
-			br = new BufferedReader(new FileReader(sample));
+			br = new BufferedReader(new FileReader(full));
 			String line = br.readLine();
 			while(line != null) {
 				ArrayList<Character> blatt = new ArrayList<>();
@@ -123,38 +123,85 @@ public class day7 {
 			int frequenz = Collections.frequency(blatt, c);
 			type.add(Character.forDigit(frequenz, 10));
 		}
+		int returnValue = 0;
 		if (type.contains('5')) {
 			//Full House
-			return 6;
+			returnValue = 6;
 		}
 		else if (type.contains('4')) {
 			//Vierling
-			return 5;
+		    	if (Collections.frequency(blatt, 'J') >= 1) {
+		    	    returnValue = 6;
+		    	}
+		    	else {
+		    	    returnValue = 5;
+		    	}
 		}
 		else if (type.contains('3')) {
 			if (type.contains('2')) {
-				//Full House
-				return 4;
+			    //Full House
+			    if (Collections.frequency(blatt, 'J') >= 2) {
+				returnValue = 6;
+			    }
+			    else {
+				returnValue =  4;
+			    }
 			}
 			else {
-				//Drilling
-				return 3;
+			    //Drilling
+			    if (Collections.frequency(blatt, 'J') == 1) {
+				returnValue = 5;
+			    }
+			    //Ist überflüssig
+			    else if (Collections.frequency(blatt, 'J') == 2) {
+				returnValue = 6;
+			    }
+			    else if (Collections.frequency(blatt, 'J') == 3) {
+				returnValue = 5;
+			    }
+			    else {
+				returnValue = 3;
+			    }
 			}
 		}
 		else if (type.contains('2')) {
-				//Zwei Paar
+		    	//Zwei Paar
 			if (Collections.frequency(type, '2') == 2) {
-				return 2;
+			    if (Collections.frequency(blatt, 'J') == 2) {
+				returnValue = 5;
+			    }
+			    else {
+				if (Collections.frequency(blatt, 'J') == 1) {
+				    returnValue = 4;
+				}
+				else {
+				    returnValue = 2;
+				}
+			    }
 			}
 			else {
-				//Ein Paar
-				return 1;
+			    //Ein Paar
+			    if (Collections.frequency(blatt, 'J') == 2) {
+				returnValue = 3;
+			    }
+			    else if (Collections.frequency(blatt, 'J') >= 1) {
+				returnValue = 3;
+			    }
+			    else {
+				returnValue =  1;
+			    }
 			}
 		}
 		else {
 			//Einzelkarte
-			return 0;
+		    	if (Collections.frequency(blatt, 'J') == 1) {
+		    	    returnValue = 1;
+		    	}
+		    	else {
+		    	    returnValue = 0;
+		    	}
 		}
+		return returnValue;
 	}
 
 }
