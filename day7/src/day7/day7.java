@@ -31,14 +31,17 @@ public class day7 {
 		ArrayList<Character> alist = new ArrayList<>(cards);
 		
 		ArrayList<ArrayList<ArrayList<Character>>> overall = new ArrayList<>();
+		String sample = "sample.txt";
+		String full = "input.txt";
 		
 		BufferedReader br;
 		try {
-			br = new BufferedReader(new FileReader("sample.txt"));
+			br = new BufferedReader(new FileReader(sample));
 			String line = br.readLine();
 			while(line != null) {
 				ArrayList<Character> blatt = new ArrayList<>();
 				System.out.println(line);
+				String lineSplit = line.split(" ")[1];
 				line = line.split(" ")[0];
 				for (int i = 0; i < line.length(); i++) {
 					blatt.add(line.charAt(i));
@@ -46,9 +49,16 @@ public class day7 {
 				System.out.println(blatt);
 				ArrayList<ArrayList<Character>> pair = new ArrayList<>();
 				ArrayList<Character> strength = new ArrayList<>();
+				ArrayList<Character> wert = new ArrayList<>();
 				strength.add(Character.forDigit(frequencyCheck(blatt, cards),10));
 				pair.add(strength);
 				pair.add(blatt);
+				
+				for (int i = 0; i < lineSplit.length(); i++) {
+					wert.add(lineSplit.charAt(i));
+				}
+				
+				pair.add(wert);
 				overall.add(pair);
 				
 				
@@ -60,36 +70,50 @@ public class day7 {
 		}
 		
 		//Auswertung Part I
-		for (int i = 0; i < overall.size(); i++) {
-			System.out.print(overall.get(i).get(0) + " " + overall.get(i).get(1));
-			System.out.println();
-		}
 		System.out.println();
 		for (int i = 0; i < overall.size(); i++) {
 			for (int j = 0; j < overall.size()-1; j++) {
-				if(overall.get(j).get(0).get(0) < overall.get(j+1).get(0).get(0)) {
-					char bigger = overall.get(j).get(0).get(0);
-					ArrayList<Character> biggerArr = overall.get(j).get(1);
-					char smaller = overall.get(j+1).get(0).get(0);
-					ArrayList<Character> smallerArr = overall.get(j+1).get(1);
-					overall.get(j).get(0).set(0, smaller);
-					overall.get(j).set(1, smallerArr);
-					overall.get(j+1).get(0).set(0, bigger);
-					overall.get(j+1).set(1, biggerArr);
+				if(overall.get(j).get(0).get(0) > overall.get(j+1).get(0).get(0)) {
+					ArrayList<ArrayList<Character>> biggerArr = overall.get(j);
+					ArrayList<ArrayList<Character>> smallerArr = overall.get(j+1);
+					overall.set(j, smallerArr);
+					overall.set(j+1, biggerArr);
 				}
 				else if (overall.get(j).get(0).get(0) == overall.get(j+1).get(0).get(0)) {
 					for (int v = 0; v < overall.get(j).get(1).size(); v++) {
-						if (alist.indexOf(overall.get(j).get(1).get(v)) > alist.indexOf(overall.get(j+1).get(1).get(v))) {
-							
+						if (alist.indexOf(overall.get(j).get(1).get(v)) < alist.indexOf(overall.get(j+1).get(1).get(v))) {
+							ArrayList<ArrayList<Character>> biggerArr = overall.get(j);
+							ArrayList<ArrayList<Character>> smallerArr = overall.get(j+1);
+							overall.set(j+1, smallerArr);
+							overall.set(j, biggerArr);
+							break;
+						}
+						else if (alist.indexOf(overall.get(j).get(1).get(v)) > alist.indexOf(overall.get(j+1).get(1).get(v))) {
+							ArrayList<ArrayList<Character>> biggerArr = overall.get(j);
+							ArrayList<ArrayList<Character>> smallerArr = overall.get(j+1);
+							overall.set(j, smallerArr);
+							overall.set(j+1, biggerArr);
+							break;
 						}
 					}
 				}
 			}
 		}
 		for (int i = 0; i < overall.size(); i++) {
-			System.out.print(overall.get(i).get(0) + " " + overall.get(i).get(1));
+			System.out.print(overall.get(i).get(0) + " " + overall.get(i).get(1) + " " + overall.get(i).get(2));
 			System.out.println();
 		}
+		
+		//Caluclation Part1
+		int Resultat = 0;
+		for (int i = 0; i < overall.size(); i++) {
+			String zwischenRes = "";
+			for (int v = 0; v < overall.get(i).get(2).size(); v++) {
+				zwischenRes += overall.get(i).get(2).get(v);
+			}
+			Resultat += ((i+1) * Integer.parseInt(zwischenRes));
+		}
+		System.out.println("Total: " + Resultat);
 	}
 	
 	public static int frequencyCheck(ArrayList<Character> blatt, LinkedHashSet<Character> cards) {
