@@ -14,6 +14,7 @@ public class day7 {
 
 	public static void main(String[] args) {
 		LinkedHashSet<Character> cards = new LinkedHashSet<>();
+		cards.add('J'); // Part II 
 		cards.add('2');
 		cards.add('3');
 		cards.add('4');
@@ -23,7 +24,7 @@ public class day7 {
 		cards.add('8');
 		cards.add('9');
 		cards.add('T');
-		cards.add('J');
+		//cards.add('J'); // Part I 
 		cards.add('Q');
 		cards.add('K');
 		cards.add('A');
