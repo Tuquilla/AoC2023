@@ -1,15 +1,14 @@
 import numpy as np
 
 #Galaxydistance calculation
-def distance(galaxylist=[]):
-    counterX=1
+def distance(galaxylist=[], raster=[]):
     totalPaths=0
-    for x in galaxylist:
-        print(x)
-        for y in range(counterX,len(galaxylist)):
-            print(galaxylist[y])
-        counterX += 1
-        print('\n')
+    for x in range(0, len(galaxylist)):
+        shortestPathGalaxy= len(raster) + len(raster[0])
+        for y in range(x+1,len(galaxylist)):
+            shortestPath = abs(galaxylist[x][0]-galaxylist[y][0]) + abs(galaxylist[x][1]-galaxylist[y][1])
+            totalPaths += shortestPath
+                
     return totalPaths
 
 raster = np.array([])
@@ -23,17 +22,21 @@ with open('sample.txt', 'r') as f:
             y.append(x)
         rasterP.append(y)
 
+expand=2
+
 raster = np.asarray(rasterP)
 counter=0
 for x in raster:
     if '#' not in x:
         y = np.copy(x)
-        raster = np.insert(raster,counter,y, axis=0)
+        for v in range(expand-1):
+            raster = np.insert(raster,counter,y, axis=0)
+            counter += 1
     counter += 1
-
-print('\n')
+"""
 for x in raster:
     print(x)
+"""
 
 raster = np.transpose(raster)
 
@@ -41,14 +44,18 @@ counter=0
 for x in raster:
     if '#' not in x:
         y = np.copy(x)
-        raster = np.insert(raster,counter,y, axis=0)
+        for v in range(expand-1):
+            raster = np.insert(raster,counter,y, axis=0)
+            counter += 1
     counter += 1
 
 raster = np.transpose(raster)
 
+"""
 print('\n')
 for x in raster:
     print(x)
+"""
 
 #get coordinates of each galaxy
 index1=0
@@ -62,6 +69,4 @@ for x in raster:
         index2 += 1
     index1 += 1
 
-print(len(galaxylist))
-
-print(distance(galaxylist))
+print(distance(galaxylist,raster))
